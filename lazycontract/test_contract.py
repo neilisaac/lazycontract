@@ -15,6 +15,15 @@ def test_string_int_float():
     assert x.to_dict() == dict(a='foo', b=1, c=2.3)
 
 
+def test_object_property():
+    class ObjectPropertyContract(LazyContract):
+        a = ObjectProperty(TestContract)
+        b = ObjectProperty(TestContract)
+
+    x = ObjectPropertyContract(a=dict(a='foo', b=1, c=2.3), b=TestContract(a='bar', b=4, c=5.6))
+    assert x.to_dict() == dict(a=dict(a='foo', b=1, c=2.3), b=dict(a='bar', b=4, c=5.6))
+
+
 def test_kwargs_deserialization():
     x = TestContract(a='foo')
     assert x.a == 'foo'

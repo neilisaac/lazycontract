@@ -48,7 +48,7 @@ class LazyProperty(object):
         return obj
 
     def deserialize(self, obj):
-        return obj
+        return obj if isinstance(obj, self._type) else self._type(obj)
 
 
 class LazyContract(object):

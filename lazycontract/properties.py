@@ -11,6 +11,11 @@ class StringProperty(LazyProperty):
 
 
 
+class BooleanProperty(LazyProperty):
+
+    _type = bool
+
+
 class IntegerProperty(LazyProperty):
     _type = six.integer_types
 

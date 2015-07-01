@@ -9,6 +9,8 @@ class StringProperty(LazyProperty):
 
     _type = six.string_types
 
+    def deserialize(self, obj):
+        return obj if isinstance(obj, self._type) else six.u(obj)
 
 
 class BooleanProperty(LazyProperty):
@@ -17,7 +19,11 @@ class BooleanProperty(LazyProperty):
 
 
 class IntegerProperty(LazyProperty):
+
     _type = six.integer_types
+
+    def deserialize(self, obj):
+        return obj if isinstance(obj, self._type) else int(obj)
 
 
 class FloatProperty(LazyProperty):

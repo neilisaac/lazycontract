@@ -6,7 +6,7 @@ from .properties import *
 
 class TestContract(LazyContract):
     a = StringProperty()
-    b = IntProperty()
+    b = IntegerProperty()
     c = FloatProperty()
 
 

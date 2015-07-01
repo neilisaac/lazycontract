@@ -10,8 +10,8 @@ class StringProperty(LazyProperty):
     _type = six.string_types
 
 
-class IntProperty(LazyProperty):
 
+class IntegerProperty(LazyProperty):
     _type = six.integer_types
 
 

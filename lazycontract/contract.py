@@ -27,7 +27,7 @@ class LazyProperty(object):
         if required and default is not None:
             raise LazyContractError('default specified for required property')
 
-        self.name = None
+        self.name = 'anonymous'
         self.required = required
         self.default = default
 
@@ -42,7 +42,7 @@ class LazyProperty(object):
 
     def validate(self, obj):
         if not isinstance(obj, self._type) and (obj is not None or self.required):
-            raise LazyContractValidationError('{} is not of type {}'.format(obj, self._type))
+            raise LazyContractValidationError('''LazyContract attribute '{}' assigned value {} is not of type {}'''.format(self.name, obj, self._type))
 
     def serialize(self, obj):
         return obj
@@ -79,7 +79,7 @@ class LazyContract(object):
             if key in self.__properties:
                 setattr(self, key, self.__properties[key].deserialize(value))
             else:
-                raise AttributeError('LazyContract \'{}\' has no attribute \'{}\''.format(type(self).__name__, key))
+                raise AttributeError("""LazyContract '{}' has no attribute '{}'""".format(type(self).__name__, key))
 
     def __iter_properties(self):
         for name, prop in six.iteritems(type(self).__dict__):

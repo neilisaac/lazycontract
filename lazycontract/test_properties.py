@@ -1,21 +1,29 @@
 from __future__ import absolute_import
 
-from .contract import *
-from .properties import *
+from .contract import LazyContract
+from .properties import (ObjectProperty, ListProperty, SetProperty,
+                         DictProperty, StringProperty, IntegerProperty,
+                         FloatProperty, BooleanProperty)
 
 
-class TestContract(LazyContract):
-    a = StringProperty()
-    b = IntegerProperty()
-    c = FloatProperty()
+def test_basic_properties():
+    class TestContract(LazyContract):
+        a = StringProperty()
+        b = IntegerProperty()
+        c = FloatProperty()
+        d = BooleanProperty()
 
-
-def test_string_int_float():
-    x = TestContract(a='foo', b=1, c=2.3)
-    assert x.to_dict() == dict(a='foo', b=1, c=2.3)
+    expected = dict(a='foo', b=1, c=2.3, d=False)
+    assert TestContract(a='foo', b=1, c=2.3, d=False).to_dict() == expected
+    assert TestContract(a='foo', b='1', c='2.3', d='false').to_dict() == expected
 
 
 def test_object_property():
+    class TestContract(LazyContract):
+        a = StringProperty()
+        b = IntegerProperty()
+        c = FloatProperty()
+
     class ObjectPropertyContract(LazyContract):
         a = ObjectProperty(TestContract)
         b = ObjectProperty(TestContract)
@@ -25,6 +33,11 @@ def test_object_property():
 
 
 def test_list_property():
+    class TestContract(LazyContract):
+        a = StringProperty()
+        b = IntegerProperty()
+        c = FloatProperty()
+
     class ListPropertyContract(LazyContract):
         a = ListProperty()
         i = ListProperty(IntegerProperty())
@@ -39,6 +52,11 @@ def test_list_property():
 
 
 def test_dict_property():
+    class TestContract(LazyContract):
+        a = StringProperty()
+        b = IntegerProperty()
+        c = FloatProperty()
+
     class DictPropertyContract(LazyContract):
         a = DictProperty()
         i = DictProperty(IntegerProperty())
@@ -53,6 +71,12 @@ def test_dict_property():
 
 
 def test_set_property():
+
+    class TestContract(LazyContract):
+        a = StringProperty()
+        b = IntegerProperty()
+        c = FloatProperty()
+
     class SetPropertyContract(LazyContract):
         a = SetProperty()
         i = SetProperty(IntegerProperty())
@@ -63,36 +87,3 @@ def test_set_property():
         i={1, '2'})
 
     assert x.to_dict() == dict(a={1, 'foo'}, i={1, 2})
-
-
-def test_kwargs_deserialization():
-    x = TestContract(a='foo')
-    assert x.a == 'foo'
-    assert repr(x) == 'TestContract(a=\'foo\')'
-
-
-def test_dict_deserialization():
-    x = TestContract({'a': 'foo'})
-    assert x.a == 'foo'
-    assert repr(x) == 'TestContract(a=\'foo\')'
-
-
-def test_stringcontract_serialization():
-    x = TestContract(a='foo')
-    x.y = 4
-    s = x.to_dict()
-    assert type(s) == dict
-    assert s['a'] == 'foo'
-    assert len(s) == 1
-    assert 'y' not in s
-
-
-def test_invalid_deserialize_attribute():
-    exc = None
-    try:
-        x = TestContract({'x': 'foo'})
-    except AttributeError as e:
-        exc = e
-
-    assert type(exc) == AttributeError
-    assert 'LazyContract \'TestContract\' has no attribute \'x\'' in str(exc)

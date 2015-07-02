@@ -7,14 +7,6 @@ class LazyContractError(RuntimeError):
     pass
 
 
-class LazyContractSerializationError(LazyContractError):
-    pass
-
-
-class LazyContractDeserializationError(LazyContractError):
-    pass
-
-
 class LazyContractValidationError(LazyContractError):
     pass
 
@@ -79,7 +71,9 @@ class LazyContract(object):
             if key in self.__properties:
                 setattr(self, key, self.__properties[key].deserialize(value))
             else:
-                raise AttributeError("""LazyContract '{}' has no attribute '{}'""".format(type(self).__name__, key))
+                raise LazyContractValidationError(
+                        """LazyContract '{}' has no attribute '{}'""".format(
+                                type(self).__name__, key))
 
     def __iter_properties(self):
         for name, prop in six.iteritems(type(self).__dict__):
@@ -87,4 +81,5 @@ class LazyContract(object):
                 yield name, prop, getattr(self, name)
 
     def to_dict(self):
-        return {name: prop.serialize(value) for name, prop, value in self.__iter_properties() if value is not None}
+        return {name: prop.serialize(value) for name, prop, value
+                in self.__iter_properties() if value is not None}

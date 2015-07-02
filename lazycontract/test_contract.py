@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .contract import LazyContract
+from .contract import LazyContract, LazyContractValidationError
 from .properties import StringProperty, IntegerProperty, FloatProperty
 
 
@@ -44,8 +44,8 @@ def test_invalid_deserialize_attribute():
     exc = None
     try:
         TestContract({'x': 'foo'})
-    except AttributeError as e:
+    except LazyContractValidationError as e:
         exc = e
 
-    assert type(exc) == AttributeError
+    assert type(exc) == LazyContractValidationError
     assert 'LazyContract \'TestContract\' has no attribute \'x\'' in str(exc)

@@ -17,6 +17,12 @@ class BooleanProperty(LazyProperty):
 
     _type = bool
 
+    def deserialize(self, obj):
+        if isinstance(obj, six.string_types):
+            return obj.lower() == 'true'
+        else:
+            return self._type(obj)
+
 
 class IntegerProperty(LazyProperty):
 

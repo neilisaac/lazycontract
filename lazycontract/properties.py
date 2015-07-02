@@ -10,7 +10,7 @@ class StringProperty(LazyProperty):
     _type = six.string_types
 
     def deserialize(self, obj):
-        return obj if isinstance(obj, self._type) else six.u(obj)
+        return obj if isinstance(obj, self._type) else str(obj)
 
 
 class BooleanProperty(LazyProperty):

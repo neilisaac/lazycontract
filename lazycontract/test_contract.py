@@ -42,15 +42,13 @@ def test_invalid_deserialize_attribute():
         b = IntegerProperty()
         c = FloatProperty()
 
-    exc = None
     try:
         TestContract({'x': 'foo'})
+        assert 'expected LazyContractValidationError' == False
     except LazyContractValidationError as e:
-        exc = e
-
-    assert type(exc) == LazyContractValidationError
-    assert LazyContractValidationError.INVALID_ATTR_FMT.format(
-            'TestContract', 'x') in str(e)
+        assert type(e) == LazyContractValidationError
+        assert LazyContractValidationError.INVALID_ATTR_FMT.format(
+                'TestContract', 'x') in str(e)
 
 
 def test_required():
@@ -113,8 +111,8 @@ def test_deserialization_error():
     reason = None
     try:
         int('3.2')
-    except Exception as reason:
-        pass
+    except Exception as e:
+        reason = e
 
     try:
         TestContract(a='3.2')

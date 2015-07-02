@@ -66,7 +66,7 @@ class LazyContract(object):
         return '{}({})'.format(
             self.__class__.__name__,
             ', '.join('{}={}'.format(name, repr(value))
-                      for name, _, value in self.__iter_properties() if value is not None))
+                      for name, _, value in self.__iter_properties()))
 
     def __discover_properties(self):
         for name, inst in six.iteritems(type(self).__dict__):

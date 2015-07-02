@@ -5,6 +5,19 @@ from .contract import LazyProperty
 import uuid
 
 
+class AliasProperty(LazyProperty):
+
+    def __init__(self, aliased_property, *args, **kwargs):
+        super(AliasProperty, self).__init__(*args, **kwargs)
+        self.aliased_property = aliased_property
+
+    def __get__(self, obj, objtype=None):
+        return getattr(obj, self.aliased_property)
+
+    def __set__(self, obj, value):
+        setattr(obj, self.aliased_property, value)
+
+
 class UUIDProperty(LazyProperty):
 
     _type = uuid.UUID

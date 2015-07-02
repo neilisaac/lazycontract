@@ -66,10 +66,16 @@ class ListProperty(ContainerProperty):
     _type = list
 
     def serialize(self, obj):
-        return obj if self._property is None else [self._property.serialize(e) for e in obj]
+        if self._property is None:
+            return obj
+        else:
+            return [self._property.serialize(e) for e in obj]
 
     def deserialize(self, obj):
-        return obj if self._property is None else [self._property.deserialize(e) for e in obj]
+        if self._property is None:
+            return obj
+        else:
+            return [self._property.deserialize(e) for e in obj]
 
 
 class DictProperty(ContainerProperty):
@@ -77,10 +83,18 @@ class DictProperty(ContainerProperty):
     _type = dict
 
     def serialize(self, obj):
-        return obj if self._property is None else {k: self._property.serialize(e) for k, e in six.iteritems(obj)}
+        if self._property is None:
+            return obj
+        else:
+            return {k: self._property.serialize(e)
+                    for k, e in six.iteritems(obj)}
 
     def deserialize(self, obj):
-        return obj if self._property is None else {k: self._property.deserialize(e) for k, e in six.iteritems(obj)}
+        if self._property is None:
+            return obj
+        else:
+            return {k: self._property.deserialize(e)
+                    for k, e in six.iteritems(obj)}
 
 
 class SetProperty(ContainerProperty):
@@ -88,7 +102,13 @@ class SetProperty(ContainerProperty):
     _type = set
 
     def serialize(self, obj):
-        return obj if self._property is None else {self._property.serialize(e) for e in obj}
+        if self._property is None:
+            return obj
+        else:
+            return {self._property.serialize(e) for e in obj}
 
     def deserialize(self, obj):
-        return obj if self._property is None else {self._property.deserialize(e) for e in obj}
+        if self._property is None:
+            return obj
+        else:
+            return {self._property.deserialize(e) for e in obj}

@@ -34,7 +34,10 @@ class UUIDStringProperty(LazyProperty):
     _type = str
 
     def deserialize(self, obj):
-        return str(obj if isinstance(obj, uuid.UUID) else uuid.UUID(obj)).lower()
+        if isinstance(obj, uuid.UUID):
+            return str(obj).lower()
+        else:
+            return str(uuid.UUID(obj)).lower()
 
     def serialize(self, obj):
         return obj.lower()

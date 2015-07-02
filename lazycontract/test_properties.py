@@ -14,8 +14,10 @@ def test_basic_properties():
         d = BooleanProperty()
 
     expected = dict(a='foo', b=1, c=2.3, d=False)
-    assert TestContract(a='foo', b=1, c=2.3, d=False).to_dict() == expected
-    assert TestContract(a='foo', b='1', c='2.3', d='false').to_dict() == expected
+    t1 = TestContract(a='foo', b=1, c=2.3, d=False)
+    t2 = TestContract(a='foo', b='1', c='2.3', d='false')
+    assert t1.to_dict() == expected
+    assert t2.to_dict() == expected
 
 
 def test_object_property():
@@ -28,8 +30,10 @@ def test_object_property():
         a = ObjectProperty(TestContract)
         b = ObjectProperty(TestContract)
 
-    x = ObjectPropertyContract(a=dict(a='foo', b=1, c=2.3), b=TestContract(a='bar', b=4, c=5.6))
-    assert x.to_dict() == dict(a=dict(a='foo', b=1, c=2.3), b=dict(a='bar', b=4, c=5.6))
+    x = ObjectPropertyContract(a=dict(a='foo', b=1, c=2.3),
+                               b=TestContract(a='bar', b=4, c=5.6))
+    assert x.to_dict() == dict(a=dict(a='foo', b=1, c=2.3),
+                               b=dict(a='bar', b=4, c=5.6))
 
 
 def test_list_property():
@@ -48,7 +52,12 @@ def test_list_property():
         i=[1, 2, '3'],
         t=[dict(a='foo', b=2, c=3.4), TestContract(a='bar', b=4, c=5.6)])
 
-    assert x.to_dict() == dict(a=[1, 'foo'], i=[1, 2, 3], t=[dict(a='foo', b=2, c=3.4), dict(a='bar', b=4, c=5.6)])
+    expected = dict(a=[1, 'foo'],
+                    i=[1, 2, 3],
+                    t=[dict(a='foo', b=2, c=3.4),
+                       dict(a='bar', b=4, c=5.6)])
+
+    assert x.to_dict() == expected
 
 
 def test_dict_property():
@@ -67,7 +76,9 @@ def test_dict_property():
         i={1: '2'},
         t={'t': TestContract(a='bar', b=4, c=5.6)})
 
-    assert x.to_dict() == dict(a={1: 'foo'}, i={1: 2}, t={'t': dict(a='bar', b=4, c=5.6)})
+    assert x.to_dict() == dict(a={1: 'foo'},
+                               i={1: 2},
+                               t={'t': dict(a='bar', b=4, c=5.6)})
 
 
 def test_set_property():

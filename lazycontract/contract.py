@@ -8,7 +8,7 @@ class LazyContractError(RuntimeError):
 
 
 class LazyContractValidationError(LazyContractError):
-    pass
+    ATTR_FMT = '{}.{} value \'{}\' is not of type {}'
 
 
 class LazyProperty(object):
@@ -33,8 +33,11 @@ class LazyProperty(object):
         obj.__dict__[self.name] = value
 
     def validate(self, obj):
-        if not isinstance(obj, self._type) and (obj is not None or self.required):
-            raise LazyContractValidationError('''LazyContract attribute '{}' assigned value {} is not of type {}'''.format(self.name, obj, self._type))
+        if not isinstance(obj, self._type) and \
+                (obj is not None or self.required):
+            raise LazyContractValidationError(
+                    LazyContractValidationError.ATTR_FMT.format(
+                            type(self).__name__, self.name, obj, self._type))
 
     def serialize(self, obj):
         return obj
@@ -47,7 +50,7 @@ class LazyContract(object):
 
     def __init__(self, _obj=None, **kwargs):
         if _obj is not None and kwargs:
-            raise LazyContractError('cannot construct from both _obj and kwargs')
+            raise LazyContractError('both _obj and kwargs provided')
 
         self.__properties = dict()
 

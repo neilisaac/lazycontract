@@ -25,16 +25,18 @@ class LazyContractValidationError(LazyContractError):
 
 
 class LazyProperty(object):
-    ''' Base class for descriptors used as properties in a LazyContract '''
+    ''' Base class for descriptors used as properties in a LazyContract.
+        Create a sub-class of this to define your own (de-)serialization.
+    '''
 
-    _type = type(None)
+    _type = type(None)  # defines the type that instances take on
 
-    _default_name = '(anonymous)'
+    _default_name = '(anonymous)'  # applies to properties within a container
 
     def __init__(self, name=None, default=None,
                  required=False, not_none=False, exclude_if_none=True):
         ''' Create a LazyProperty.
-            name (string):   the attribute name used for (de)serialization
+            name (string):   the attribute name used for (de-)serialization
             default (_type): default value if not available during deserialization
             required (bool): raise LazyContractValidationError if not provided
             not_none (bool): raise LazyContractValidationError if value is None
@@ -91,8 +93,14 @@ class LazyProperty(object):
 
 
 class LazyContract(object):
+    ''' Base class for custom contracts to be serialized and deserialized. '''
 
     def __init__(self, _obj=None, **kwargs):
+        ''' Deserialize a contract.
+            _obj (dict): data to deserialize
+            kwargs:      individual attributes to deserialize
+        '''
+
         if _obj is not None and kwargs:
             raise LazyContractError('both _obj and kwargs provided')
 
@@ -155,6 +163,8 @@ class LazyContract(object):
                 yield name, prop, getattr(self, name)
 
     def to_dict(self):
+        ''' Serialize the contract object into a Python dictionary '''
+
         return {prop.name: prop.serialize(value) for name, prop, value
                 in self.__iter_properties()
                 if not prop.name.startswith('_') and

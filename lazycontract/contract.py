@@ -4,14 +4,20 @@ import six
 
 
 class LazyContractError(Exception):
+    ''' Catch-all exception type '''
+
     pass
 
 
 class LazyContractDeserializationError(LazyContractError):
+    ''' Exception deserializing a message into a LazyContract-derived class '''
+
     FMT = 'failed to deserialize {}.{} from {} due to: {}'
 
 
 class LazyContractValidationError(LazyContractError):
+    ''' Exception validating data within a LazyContract-derived class '''
+
     INVALID_ATTR_FMT = '{} has no attribute \'{}\''
     NOT_NONE_FMT = '{} {} must not be None'
     REQUIRED_FMT = '{}.{} is required'
@@ -19,6 +25,7 @@ class LazyContractValidationError(LazyContractError):
 
 
 class LazyProperty(object):
+    ''' Base class for descriptors used as properties in a LazyContract '''
 
     _type = type(None)
 
@@ -26,6 +33,14 @@ class LazyProperty(object):
 
     def __init__(self, name=None, default=None,
                  required=False, not_none=False, exclude_if_none=True):
+        ''' Create a LazyProperty.
+            name (string):   the attribute name used for (de)serialization
+            default (_type): default value if not available during deserialization
+            required (bool): raise LazyContractValidationError if not provided
+            not_none (bool): raise LazyContractValidationError if value is None
+            exclude_if_none (bool): don't serialize if value is None
+        '''
+
         if required and default is not None:
             raise LazyContractError('default specified for required property')
 
@@ -45,6 +60,11 @@ class LazyProperty(object):
         obj.__dict__[self.name] = value
 
     def validate(self, obj):
+        ''' Validate values whenever they're set.
+            Raises LazyContractValidationError.
+            Sub-classes that override this probably want to call this method.
+        '''
+
         if obj is None and self.not_none:
             raise LazyContractValidationError(
                     LazyContractValidationError.NOT_NONE_FMT.format(
@@ -56,9 +76,17 @@ class LazyProperty(object):
                             type(self).__name__, self.name, repr(obj), self._type))
 
     def serialize(self, obj):
+        ''' Convert the value to a basic serializable type (ex. str)
+            Sub-classes probably need to override this.
+        '''
+
         return obj
 
     def deserialize(self, obj):
+        ''' Convert abasic type to _type.
+            Sub-classes probably need to override this.
+        '''
+
         return obj if isinstance(obj, self._type) else self._type(obj)
 
 

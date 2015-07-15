@@ -3,11 +3,13 @@
 from setuptools import setup
 
 setup(name='lazycontract',
-      version='0.9',
+      version='0.9.1',
       description='Python library to define declarative contracts for serialization and deserialization',
+      long_description='Please see https://github.com/neilisaac/lazycontract for details',
       author='Neil Isaac',
       author_email='isaac.neil@gmail.com',
       license='MIT',
+      platforms=['Any'],
       url='https://github.com/neilisaac/lazycontract',
       packages=['lazycontract'],
       install_requires=['six'],

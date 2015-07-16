@@ -137,3 +137,14 @@ def test_serialization_name():
 
     t.b = 'b2'
     assert t.to_dict() == dict(b='b2')
+
+
+def test_inheritence():
+    class TestContract1(LazyContract):
+        a = StringProperty()
+
+    class TestContract2(TestContract1):
+        b = StringProperty()
+
+    t = TestContract2(a='foo', b='bar')
+    assert t.to_dict() == dict(a='foo', b='bar')

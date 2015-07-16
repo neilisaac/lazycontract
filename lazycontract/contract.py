@@ -107,7 +107,10 @@ class LazyContract(object):
         self.__properties = dict()
         self.__mappings = dict()
 
-        self.__discover_properties(_obj or kwargs)
+        for cls in reversed(self.__class__.__mro__):
+            if cls != LazyContract and issubclass(cls, LazyContract):
+                self.__discover_properties(_obj or kwargs, cls)
+
         self.__populate_properties(_obj or kwargs)
 
     def __repr__(self):
@@ -116,8 +119,8 @@ class LazyContract(object):
             ', '.join('{}={}'.format(name, repr(value))
                       for name, _, value in self.__iter_properties()))
 
-    def __discover_properties(self, obj):
-        for name, inst in six.iteritems(type(self).__dict__):
+    def __discover_properties(self, obj, cls):
+        for name, inst in six.iteritems(cls.__dict__):
             if isinstance(inst, LazyProperty):
                 self.__properties[name] = inst
 
@@ -158,14 +161,13 @@ class LazyContract(object):
             setattr(self, key, value)
 
     def __iter_properties(self):
-        for name, prop in six.iteritems(type(self).__dict__):
-            if isinstance(prop, LazyProperty):
-                yield name, prop, getattr(self, name)
+        for name, prop in six.iteritems(self.__properties):
+            yield name, prop, getattr(self, name)
 
     def to_dict(self):
         ''' Serialize the contract object into a Python dictionary '''
 
-        return {prop.name: prop.serialize(value) for name, prop, value
-                in self.__iter_properties()
+        return {prop.name: prop.serialize(value)
+                for name, prop, value in self.__iter_properties()
                 if not prop.name.startswith('_') and
                 (value is not None or not prop.exclude_if_none)}

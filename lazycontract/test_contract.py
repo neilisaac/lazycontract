@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .contract import (LazyContract, LazyContractValidationError,
+from .contract import (LazyContract, DynamicContract, LazyContractValidationError,
                        LazyContractDeserializationError)
 from .properties import StringProperty, IntegerProperty, FloatProperty
 
@@ -148,3 +148,12 @@ def test_inheritence():
 
     t = TestContract2(a='foo', b='bar')
     assert t.to_dict() == dict(a='foo', b='bar')
+
+
+def test_dynamic_contract():
+    class TestContract(DynamicContract):
+        a = StringProperty()
+
+    t = TestContract(a='foo', b='bar')
+    assert t.to_dict() == dict(a='foo')
+    assert t.b == 'bar'

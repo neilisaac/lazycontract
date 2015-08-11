@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .contract import LazyContract, LazyProperty, LazyContractError
+from .contract import LazyContract, DynamicContract, LazyProperty, LazyContractError
 
 from .properties import *
 

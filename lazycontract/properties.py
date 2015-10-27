@@ -34,9 +34,6 @@ class IntegerProperty(LazyProperty):
 
 class EnumerationProperty(LazyProperty):
 
-    class EnumerationValueError(Exception):
-        FMT = 'enumeration option {} not in acception options: {}'
-
     _type = six.string_types
 
     def __init__(self, options, *args, **kwargs):
@@ -45,7 +42,7 @@ class EnumerationProperty(LazyProperty):
 
     def deserialize(self, obj):
         if obj is not None and obj not in self._options:
-            raise self.EnumerationValueError(self.EnumerationValueError.FMT.format(obj, self._options))
+            raise ValueError('enumeration option {} not in acception options: {}'.format(obj, self._options))
         return obj
 
 

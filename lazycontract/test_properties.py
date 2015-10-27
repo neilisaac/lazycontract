@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .contract import LazyContract, LazyContractValidationError
+from .contract import LazyContract, LazyContractValidationError, LazyContractDeserializationError
 from .properties import (ObjectProperty, ListProperty, SetProperty,
                          DictProperty, StringProperty, IntegerProperty,
                          FloatProperty, BooleanProperty, EnumerationProperty)
@@ -121,6 +121,18 @@ def test_enum_property():
     assert t.x is None
     assert t.y == 'b'
     assert t.z is None
+
+    try:
+        TestContract(x=1, y='b')
+        assert 'Expected LazyContractDeserializationError' == False
+    except LazyContractDeserializationError:
+        pass
+
+    try:
+        TestContract(y='d')
+        assert 'Expected LazyContractDeserializationError' == False
+    except LazyContractDeserializationError:
+        pass
 
     try:
         TestContract(b=None)

@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 
-from .contract import LazyContract
+from .contract import LazyContract, LazyContractValidationError
 from .properties import (ObjectProperty, ListProperty, SetProperty,
                          DictProperty, StringProperty, IntegerProperty,
-                         FloatProperty, BooleanProperty)
+                         FloatProperty, BooleanProperty, EnumerationProperty)
 
 
 def test_basic_properties():
@@ -98,3 +98,32 @@ def test_set_property():
         i={1, '2'})
 
     assert x.to_dict() == dict(a={1, 'foo'}, i={1, 2})
+
+
+def test_enum_property():
+
+    class TestContract(LazyContract):
+        x = EnumerationProperty(['a', 'b', 'c'])
+        y = EnumerationProperty(['a', 'b', 'c'], not_none=True)
+        z = EnumerationProperty(['a', 'b', 'c'], default='c')
+
+    t = TestContract(x='a', y='b')
+    assert t.x == 'a'
+    assert t.y == 'b'
+    assert t.z == 'c'
+
+    t = TestContract(y='b')
+    assert t.x is None
+    assert t.y == 'b'
+    assert t.z == 'c'
+
+    t = TestContract(y='b', z=None)
+    assert t.x is None
+    assert t.y == 'b'
+    assert t.z is None
+
+    try:
+        TestContract(b=None)
+        assert 'Expected LazyContractValidationError' == False
+    except LazyContractValidationError:
+        pass

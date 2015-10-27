@@ -32,6 +32,23 @@ class IntegerProperty(LazyProperty):
         return obj if isinstance(obj, self._type) else int(obj)
 
 
+class EnumerationProperty(LazyProperty):
+
+    class EnumerationValueError(Exception):
+        FMT = 'enumeration option {} not in acception options: {}'
+
+    _type = six.string_types
+
+    def __init__(self, options, *args, **kwargs):
+        super(EnumerationProperty, self).__init__(*args, **kwargs)
+        self._options = set(options)
+
+    def deserialize(self, obj):
+        if obj is not None and obj not in self._options:
+            raise self.EnumerationValueError(self.EnumerationValueError.FMT.format(obj, self._options))
+        return obj
+
+
 class FloatProperty(LazyProperty):
 
     _type = float

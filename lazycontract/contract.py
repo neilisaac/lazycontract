@@ -20,7 +20,7 @@ class LazyContractValidationError(LazyContractError):
 
     INVALID_ATTR_FMT = '{} has no attribute \'{}\''
     NOT_NONE_FMT = '{} {} must not be None'
-    REQUIRED_FMT = '{}.{} is required'
+    REQUIRED_FMT = '{}.{} is required for {}'
     ATTR_TYPE_FMT = '{}.{} value {} is not of type {}'
 
 
@@ -133,7 +133,7 @@ class LazyContract(object):
                     if inst.required:
                         raise LazyContractValidationError(
                                 LazyContractValidationError.REQUIRED_FMT.format(
-                                        type(self).__name__, inst.name))
+                                        type(self).__name__, inst.name, repr(obj)))
 
                     if inst.not_none and inst.default is None:
                         raise LazyContractValidationError(

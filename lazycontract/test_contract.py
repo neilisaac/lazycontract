@@ -60,7 +60,7 @@ def test_required():
         assert 'LazyContractValidationError expected' == False
     except LazyContractValidationError as e:
         assert LazyContractValidationError.REQUIRED_FMT.format(
-                'TestContract', 'a') in str(e)
+                'TestContract', 'a', '') in str(e)
 
 
 def test_not_none():

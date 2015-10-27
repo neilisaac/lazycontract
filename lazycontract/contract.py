@@ -95,6 +95,8 @@ class LazyProperty(object):
 class LazyContract(object):
     ''' Base class for custom contracts to be serialized and deserialized. '''
 
+    _ignore_undefined_attributes = True
+
     def __init__(self, _obj=None, **kwargs):
         ''' Deserialize a contract.
             _obj (dict): data to deserialize
@@ -146,6 +148,8 @@ class LazyContract(object):
                 key = self._mappings[key]
 
             if key not in self._properties:
+                if self._ignore_undefined_attributes:
+                    continue
                 raise LazyContractValidationError(
                         LazyContractValidationError.INVALID_ATTR_FMT.format(
                                 type(self).__name__, key))
@@ -173,8 +177,15 @@ class LazyContract(object):
                 (value is not None or not prop.exclude_if_none)}
 
 
+class StrictContract(LazyContract):
+    ''' Variant of LazyContract does not allow undefined attributes
+    '''
+
+    _ignore_undefined_attributes = False
+
+
 class DynamicContract(LazyContract):
-    ''' Variant of LazyContract that accepts undeclared attributes '''
+    ''' Variant of LazyContract that deserializes undeclared attributes '''
 
     def _populate_properties(self, obj):
         contained = {k: v for k, v in six.iteritems(obj) \

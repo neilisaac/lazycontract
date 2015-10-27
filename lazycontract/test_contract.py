@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from .contract import (LazyContract, DynamicContract, LazyContractValidationError,
+from .contract import (LazyContract, StrictContract, DynamicContract, LazyContractValidationError,
                        LazyContractDeserializationError)
 from .properties import StringProperty, IntegerProperty, FloatProperty
 
@@ -36,8 +36,8 @@ def test_dict_deserialization():
     assert repr(x) == 'TestContract(a=\'foo\')'
 
 
-def test_invalid_deserialize_attribute():
-    class TestContract(LazyContract):
+def test_strict_contract_invalid_deserialize_attribute():
+    class TestContract(StrictContract):
         a = StringProperty()
         b = IntegerProperty()
         c = FloatProperty()
@@ -148,6 +148,19 @@ def test_inheritence():
 
     t = TestContract2(a='foo', b='bar')
     assert t.to_dict() == dict(a='foo', b='bar')
+
+
+def test_lazy_contract_ignores_attribute():
+    class TestContract(LazyContract):
+        a = StringProperty()
+
+    t = TestContract(a='foo', b='bar')
+    assert t.to_dict() == dict(a='foo')
+    try:
+        t.b
+        assert 'Expected AttributeError' == False
+    except AttributeError:
+        pass
 
 
 def test_dynamic_contract():

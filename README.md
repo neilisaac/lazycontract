@@ -18,6 +18,17 @@ pip install lazycontract
 ```
 
 
+### Overview
+
+Base classes:
+
+`StrictContract` only allows the defined attributes
+
+`LazyContract` ignores undefined attributes
+
+`DynamicContract` deserializes undefined attributes, but does not serialize them
+
+
 ### Example
 
 ```

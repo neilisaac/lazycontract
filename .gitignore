@@ -1,4 +1,4 @@
-.tox
+.*
 *.egg-info
 *.py[co]
 __pycache__

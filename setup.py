@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='lazycontract',
-      version='0.9.2',
+      version='0.9.3',
       description='Python library to define declarative contracts for serialization and deserialization',
       long_description='Please see https://github.com/neilisaac/lazycontract for details',
       author='Neil Isaac',

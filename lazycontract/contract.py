@@ -1,6 +1,10 @@
 from __future__ import absolute_import
 
+import re
 import six
+
+
+IDENTIFIER_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]*\Z')
 
 
 class LazyContractError(Exception):
@@ -194,4 +198,6 @@ class DynamicContract(LazyContract):
 
         for key, value in six.iteritems(obj):
             if key not in self._properties and key not in self._mappings:
-                setattr(self, key, value)
+                # ignore non-ascii keys in python2
+                if not six.PY2 or IDENTIFIER_RE.match(key):
+                    setattr(self, key, value)

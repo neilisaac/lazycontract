@@ -180,6 +180,12 @@ class LazyContract(object):
                 if not prop.name.startswith('_') and
                 (value is not None or not prop.exclude_if_none)}
 
+    @classmethod
+    def contract_properties(cls):
+        for name, inst in six.iteritems(cls.__dict__):
+            if isinstance(inst, LazyProperty):
+                yield name, inst
+
 
 class StrictContract(LazyContract):
     ''' Variant of LazyContract does not allow undefined attributes

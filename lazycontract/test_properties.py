@@ -100,13 +100,11 @@ def test_set_property():
     x = SetPropertyContract(
         a={1, 'foo'},
         i={1, '2', 2, '1', '2'},
-        t=[{'a': 'aa'},
-           {'a': 'aa'},
-           {'a': 'xx'}])
+        t=[{'a': 'aa'}, {'a': 'aa'}])
 
     assert x.to_dict() == dict(a=[1, 'foo'],
                                i=[1, 2],
-                               t=[{'a': 'aa'}, {'a': 'xx'}])
+                               t=[{'a': 'aa'}])
 
 
 def test_enum_property():

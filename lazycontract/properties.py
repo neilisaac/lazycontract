@@ -117,12 +117,12 @@ class SetProperty(ContainerProperty):
 
     def serialize(self, obj):
         if self._property is None:
-            return obj
+            return [e for e in obj]
         else:
-            return {self._property.serialize(e) for e in obj}
+            return [self._property.serialize(e) for e in obj]
 
     def deserialize(self, obj):
         if self._property is None:
-            return obj
+            return {e for e in obj}
         else:
             return {self._property.deserialize(e) for e in obj}

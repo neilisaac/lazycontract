@@ -85,8 +85,12 @@ def test_set_property():
 
     class TestContract(LazyContract):
         a = StringProperty()
-        b = IntegerProperty()
-        c = FloatProperty()
+
+        def __eq__(self, other):
+            return self.a == other.a
+
+        def __hash__(self):
+            return hash(self.a)
 
     class SetPropertyContract(LazyContract):
         a = SetProperty()
@@ -95,9 +99,14 @@ def test_set_property():
 
     x = SetPropertyContract(
         a={1, 'foo'},
-        i={1, '2'})
+        i={1, '2', 2, '1', '2'},
+        t=[{'a': 'aa'},
+           {'a': 'aa'},
+           {'a': 'xx'}])
 
-    assert x.to_dict() == dict(a={1, 'foo'}, i={1, 2})
+    assert x.to_dict() == dict(a=[1, 'foo'],
+                               i=[1, 2],
+                               t=[{'a': 'aa'}, {'a': 'xx'}])
 
 
 def test_enum_property():

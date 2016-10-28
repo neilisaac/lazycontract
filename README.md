@@ -31,7 +31,7 @@ Base classes:
 
 ### Example
 
-```
+```python
 import json
 import lazycontract
 

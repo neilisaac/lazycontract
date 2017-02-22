@@ -174,9 +174,12 @@ def test_dynamic_contract():
 def test_equals():
     class TestContract(LazyContract):
         a = StringProperty()
+        b = StringProperty()
 
     t1 = TestContract(a='foo')
     t2 = TestContract(a='foo')
+    t3 = TestContract(a='foo', b='bar')
 
     assert t1 == t2
     assert not t1 != t2
+    assert t1 != t3

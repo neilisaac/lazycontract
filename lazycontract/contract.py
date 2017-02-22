@@ -172,6 +172,17 @@ class LazyContract(object):
         for name, prop in six.iteritems(self._properties):
             yield name, prop, getattr(self, name)
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            property_pairs = zip(self.__iter_properties(), other.__iter_properties())
+            checks = map(lambda x: x[0] == x[1], property_pairs)
+            return all(checks)
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def to_dict(self):
         ''' Serialize the contract object into a Python dictionary '''
 

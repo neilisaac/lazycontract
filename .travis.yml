@@ -17,4 +17,4 @@ before_script:
 script: py.test lazycontract --cov=lazycontract 
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $EXIT_CODE
+  - ./cc-test-reporter after-build --file .coverage --exit-code $EXIT_CODE

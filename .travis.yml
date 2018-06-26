@@ -14,7 +14,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
-script: py.test lazycontract --cov=lazycontract 
+script: py.test lazycontract --cov=lazycontract --cov-report xml
 
 after_script:
   - ./cc-test-reporter after-build --file .coverage --exit-code $EXIT_CODE

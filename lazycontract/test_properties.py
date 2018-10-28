@@ -103,7 +103,7 @@ def test_set_property():
         t=[{'a': 'aa'}, {'a': 'aa'}])
 
     d = x.to_dict()
-    assert sorted(d['a']) == [1, 'foo']
+    assert d['a'] == [1, 'foo'] or d['a'] == ['foo', 1]
     assert sorted(d['i']) == [1, 2]
     assert d['t'] == [{'a': 'aa'}]
 

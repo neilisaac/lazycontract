@@ -102,9 +102,10 @@ def test_set_property():
         i={1, '2', 2, '1', '2'},
         t=[{'a': 'aa'}, {'a': 'aa'}])
 
-    assert x.to_dict() == dict(a=[1, 'foo'],
-                               i=[1, 2],
-                               t=[{'a': 'aa'}])
+    d = x.to_dict()
+    assert sorted(d['a']) == [1, 'foo']
+    assert sorted(d['i']) == [1, 2]
+    assert d['t'] == [{'a': 'aa'}]
 
 
 def test_enum_property():
